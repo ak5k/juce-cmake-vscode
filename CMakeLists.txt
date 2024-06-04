@@ -51,7 +51,7 @@ if(NOT IS_GIT_REPO STREQUAL "true")
 
 endif()
 execute_process(
-        COMMAND ${GIT_EXECUTABLE} submodule add https://github.com/juce-framework/JUCE
+        COMMAND ${GIT_EXECUTABLE} submodule add --force https://github.com/juce-framework/JUCE
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
         ERROR_QUIET
 )
