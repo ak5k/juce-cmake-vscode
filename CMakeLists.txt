@@ -88,13 +88,13 @@ if(NOT EXISTS "${MY_EXTERNAL_DIR}/JUCE")
             COMMAND ${GIT_EXECUTABLE} submodule add --force https://github.com/juce-framework/JUCE
             WORKING_DIRECTORY "${MY_EXTERNAL_DIR}"
     )
-    file(CREATE_LINK "${MY_EXTERNAL_DIR}/JUCE" "${CMAKE_CURRENT_SOURCE_DIR}/JUCE" SYMBOLIC)
 endif()
 
 # update submodules
 execute_process(
         COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
 )
+file(CREATE_LINK "${MY_EXTERNAL_DIR}/JUCE" "${CMAKE_CURRENT_SOURCE_DIR}/JUCE" SYMBOLIC)
 
 ################################################################################
 include(JUCE.cmake)
