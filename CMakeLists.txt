@@ -31,6 +31,7 @@ if(NOT EXISTS "${MY_FILE}")
     set(MULTI_LINE_STRING
             [[
 *[Bb]uild*/
+external/
 JUCE/
 vcpkg/
 .idea/
@@ -50,7 +51,7 @@ if(NOT IS_GIT_REPO STREQUAL "true")
 
     execute_process(
             COMMAND ${GIT_EXECUTABLE} submodule add https://github.com/juce-framework/JUCE
-            WORKING_DIRECTORY "${MY_EXTERNAL_DIR}"
+            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
             ERROR_QUIET
     )
 endif()
@@ -94,7 +95,6 @@ endif()
 execute_process(
         COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
 )
-file(CREATE_LINK "${MY_EXTERNAL_DIR}/JUCE" "${CMAKE_CURRENT_SOURCE_DIR}/JUCE" SYMBOLIC)
 
 ################################################################################
 include(JUCE.cmake)
@@ -260,7 +260,7 @@ else()
             file(WRITE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg.json" "${MULTI_LINE_STRING}")
         endif()
         execute_process(
-                COMMAND ${GIT_EXECUTABLE} submodule add https://github.com/microsoft/vcpkg.git
+                COMMAND ${GIT_EXECUTABLE} submodule add --force https://github.com/microsoft/vcpkg.git
                 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
                 RESULT_VARIABLE GIT_SUBMOD_RESULT
                 ERROR_QUIET
