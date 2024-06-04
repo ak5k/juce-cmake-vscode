@@ -82,12 +82,11 @@ if(NOT DEFINED GIT_TAG)
 endif()
 string(TIMESTAMP BUILD_DATE "%Y%m%d")
 
-if(NOT EXISTS "${MY_EXTERNAL_DIR}/JUCE")
-    file(MAKE_DIRECTORY "${MY_EXTERNAL_DIR}")
+file(MAKE_DIRECTORY "${MY_EXTERNAL_DIR}")
+if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/JUCE")
     # add JUCE as submodule
     execute_process(
-            COMMAND ${GIT_EXECUTABLE} submodule add --force https://github.com/juce-framework/JUCE
-            WORKING_DIRECTORY "${MY_EXTERNAL_DIR}"
+            COMMAND ${GIT_EXECUTABLE} submodule add https://github.com/juce-framework/JUCE
     )
 endif()
 
@@ -260,7 +259,7 @@ else()
             file(WRITE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg.json" "${MULTI_LINE_STRING}")
         endif()
         execute_process(
-                COMMAND ${GIT_EXECUTABLE} submodule add --force https://github.com/microsoft/vcpkg.git
+                COMMAND ${GIT_EXECUTABLE} submodule add https://github.com/microsoft/vcpkg.git
                 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
                 RESULT_VARIABLE GIT_SUBMOD_RESULT
                 ERROR_QUIET
