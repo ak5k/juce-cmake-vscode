@@ -1,7 +1,7 @@
 # Windows: Clang GNU CLI for MSVC toolkit is recommended
 
 cmake_minimum_required(VERSION 3.22)
-project(myPlugin VERSION 1.0.0 LANGUAGES CXX)
+project(myPlugin VERSION 0.1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -81,13 +81,12 @@ if(NOT DEFINED GIT_TAG)
 endif()
 string(TIMESTAMP BUILD_DATE "%Y%m%d")
 
-if(NOT EXISTS "${MY_EXTERNAL_DIR}")
+if(NOT EXISTS "${MY_EXTERNAL_DIR}/JUCE")
     file(MAKE_DIRECTORY "${MY_EXTERNAL_DIR}")
     # add JUCE as submodule
     execute_process(
-            COMMAND ${GIT_EXECUTABLE} submodule add https://github.com/juce-framework/JUCE
+            COMMAND ${GIT_EXECUTABLE} submodule add --force https://github.com/juce-framework/JUCE
             WORKING_DIRECTORY "${MY_EXTERNAL_DIR}"
-            ERROR_QUIET
     )
     file(CREATE_LINK "${MY_EXTERNAL_DIR}/JUCE" "${CMAKE_CURRENT_SOURCE_DIR}/JUCE" SYMBOLIC)
 endif()
@@ -95,8 +94,6 @@ endif()
 # update submodules
 execute_process(
         COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
-        WORKING_DIRECTORY "${MY_EXTERNAL_DIR}"
-        ERROR_QUIET
 )
 
 ################################################################################
@@ -135,6 +132,15 @@ if(NOT MSVC)
             PRIVATE
             -Wall
             -Wextra
+            -Wno-float-conversion
+            -Wno-implicit-int-float-conversion
+            -Wno-shadow 
+            -Wno-sign-compare
+            -Wno-sign-conversion
+            -Wno-shorten-64-to-32
+            -Wno-unused-parameter
+            -Wno-unused-private-field
+            -Wno-unused-variable
     )
 endif()
 
@@ -145,9 +151,6 @@ file(GLOB_RECURSE HEADERS
         "${CMAKE_CURRENT_SOURCE_DIR}/external/somelibrary/*.h"
         "${CMAKE_CURRENT_SOURCE_DIR}/external/somelibrary*.hpp"
 )
-if(NOT CMAKE_BUILD_TYPE STREQUAL "Release" AND NOT HEADERS STREQUAL "")
-    target_precompile_headers(${PROJECT_NAME} PRIVATE "${HEADERS}")
-endif()
 
 # include directories from project root
 # to use #include <pathInRoot/optionalSubDirs/z.h>
@@ -213,6 +216,30 @@ if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.vscode/launch.json")
     )
     file(MAKE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/.vscode")
     file(WRITE "${CMAKE_CURRENT_SOURCE_DIR}/.vscode/launch.json" "${MULTI_LINE_STRING}")
+endif()
+if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.vscode/settings.json")
+    set(MULTI_LINE_STRING
+            [[
+{
+    "C_Cpp.files.exclude": {
+        "JUCE*/": true,
+        "*[Bb]uild*/": true,
+        "vcpkg*/": true,
+        "extra*/": true,
+        "extern*/": true,
+        "[Ll]ib*/": true,
+        "*3rd*/": true,
+        "third*/": true,
+        "*module*/": true,
+        "dep*/": true,
+        "package*/": true,
+        "vendor*/": true,
+    },
+}
+]]
+    )
+    file(MAKE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/.vscode")
+    file(WRITE "${CMAKE_CURRENT_SOURCE_DIR}/.vscode/settings.json" "${MULTI_LINE_STRING}")
 endif()
 
 # if not CI build, set up use local vcpkg
