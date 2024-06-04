@@ -49,12 +49,12 @@ if(NOT IS_GIT_REPO STREQUAL "true")
             RESULT_VARIABLE GIT_SUBMOD_RESULT
     )
 
-    execute_process(
-            COMMAND ${GIT_EXECUTABLE} submodule add https://github.com/juce-framework/JUCE
-            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-            ERROR_QUIET
-    )
 endif()
+execute_process(
+        COMMAND ${GIT_EXECUTABLE} submodule add https://github.com/juce-framework/JUCE
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+        ERROR_QUIET
+)
 
 # tries to use latest tag as version
 execute_process(
@@ -83,12 +83,6 @@ endif()
 string(TIMESTAMP BUILD_DATE "%Y%m%d")
 
 file(MAKE_DIRECTORY "${MY_EXTERNAL_DIR}")
-if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/JUCE")
-    # add JUCE as submodule
-    execute_process(
-            COMMAND ${GIT_EXECUTABLE} submodule add https://github.com/juce-framework/JUCE
-    )
-endif()
 
 # update submodules
 execute_process(
