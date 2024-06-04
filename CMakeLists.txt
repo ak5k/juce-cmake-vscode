@@ -123,7 +123,7 @@ if(NOT MSVC)
     if (NOT APPLE AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     if(NOT $ENV{ARCH} MATCHES "^(arm.*|aarch64.*)$")
         message("clang and not apple and not arm/aarch")
-        target_compile_options(${PROJECT_NAME} PRIVATE -march=x86-64-v3
+        target_compile_options(${PROJECT_NAME} PUBLIC -march=x86-64-v3
         )
     endif()
     endif()
