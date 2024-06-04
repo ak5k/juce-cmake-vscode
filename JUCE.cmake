@@ -56,12 +56,31 @@ juce_generate_juce_header(${PROJECT_NAME})
 # definitions will be visible both to your code, and also the JUCE module code, so for new
 # definitions, pick unique names that are unlikely to collide! This is a standard CMake command.
 
-target_compile_definitions(${PROJECT_NAME}
-  PUBLIC
-    # JUCE_WEB_BROWSER and JUCE_USE_CURL would be on by default, but you might not need them.
-    JUCE_WEB_BROWSER=0  # If you remove this, add `NEEDS_WEB_BROWSER TRUE` to the `juce_add_plugin` call
-    JUCE_USE_CURL=0     # If you remove this, add `NEEDS_CURL TRUE` to the `juce_add_plugin` call
-    JUCE_VST3_CAN_REPLACE_VST2=0)
+target_compile_definitions(${PROJECT_NAME} PUBLIC
+    JUCE_ALSA=1
+    JUCE_CONTENT_SHARING=1
+    JUCE_DIRECTSOUND=1
+    JUCE_DISABLE_CAUTIOUS_PARAMETER_ID_CHECKING=1
+    JUCE_PLUGINHOST_LADSPA=1
+    JUCE_PLUGINHOST_LV2=1
+    JUCE_PLUGINHOST_VST3=1
+    JUCE_PLUGINHOST_VST=0
+    JUCE_PLUGINHOST_ARA=0
+    JUCE_USE_CAMERA=0
+    JUCE_USE_CDBURNER=0
+    JUCE_USE_CDREADER=0
+    JUCE_USE_CURL=0
+    JUCE_USE_FLAC=0
+    JUCE_USE_OGGVORBIS=1
+    JUCE_VST3_HOST_CROSS_PLATFORM_UID=1
+    JUCE_VST3_CAN_REPLACE_VST2=0
+    JUCE_WASAPI=1
+    JUCE_WEB_BROWSER=0
+    PIP_JUCE_EXAMPLES_DIRECTORY_STRING="${JUCE_SOURCE_DIR}/examples"
+    # This is a temporary workaround to allow builds to complete on Xcode 15.
+    # Add -Wl,-ld_classic to the OTHER_LDFLAGS build setting if you need to
+    # deploy to older versions of macOS/iOS.
+    JUCE_SILENCE_XCODE_15_LINKER_WARNING=1)
 
 # If your target needs extra binary assets, you can add them here. The first argument is the name of
 # a new static library target that will include all the binary resources. There is an optional
