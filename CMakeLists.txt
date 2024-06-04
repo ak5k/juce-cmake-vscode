@@ -119,12 +119,11 @@ target_sources(${PROJECT_NAME}
 # compiler flags for source files
 if(NOT MSVC)
     message("not msvc")
+    string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" LOWERCASE_PROCESSOR)
     if (NOT APPLE AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    if(NOT CMAKE_SYSTEM_PROCESSOR MATCHES "^(arm.*|ARM.*|aarch64.*|AARCH64.*)$")
+    if(NOT $ENV{ARCH} MATCHES "^(arm.*|aarch64.*)$")
         message("clang and not apple and not arm/aarch")
-        target_compile_definitions(${PROJECT_NAME}
-                PRIVATE
-                -march=x86-64-v3
+        target_compile_options(${PROJECT_NAME} PRIVATE -march=x86-64-v3
         )
     endif()
     endif()
